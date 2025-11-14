@@ -34,9 +34,9 @@ class i2c_driver extends uvm_driver #(i2c_basic_tr);
     dut_vif.sda_drive = 1;
     dut_vif.scl_val = 1;
     dut_vif.sda_val = 0;
-    #(period_ns*1ns);
+    @(posedge dut_vif.clk);
     dut_vif.scl_val = 0;
-    #(period_ns*1ns);
+    @(posedge dut_vif.clk);
   endtask
         
   local task set_byte(logic[7:0] b);		//we assume SCLK=0, toggle data in posedge

@@ -12,6 +12,7 @@ class base_test extends uvm_test;
   
   function void build_phase(uvm_phase phase);
     //create environment
+    env = environment::type_id::create("env", this);
   endfunction
   
 endclass

@@ -12,6 +12,10 @@ module top;
   //----- Conectar interfaz
   //----- Poner interfaz en config database
   //other instances?
+
+  // Clock
+  bit clk;
+  always #2 clk <= ~clk;
   
   initial begin
     $dumpfile("dump.vcd"); $dumpvars;
