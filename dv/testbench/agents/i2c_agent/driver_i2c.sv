@@ -20,7 +20,14 @@ class i2c_driver extends uvm_driver #(i2c_basic_tr);
   endfunction
 
   task run_phase(uvm_phase phase);
-    //...
+    fork
+      forever begin
+        i2c_basic_tr req;
+        seq_item_port.get_next_item(req);
+        //@(posedge dut_vif.clk); // Crear retardo intencionado de reloj
+        seq_item_port.item_done();
+      end
+    join_none; 
   endtask : run_phase
   
   local task set_start();

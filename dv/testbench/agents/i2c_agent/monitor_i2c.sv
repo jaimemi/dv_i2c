@@ -20,7 +20,13 @@ class i2c_monitor extends uvm_monitor;
   endfunction
   
   task run_phase(uvm_phase phase);
-    
+    fork
+      forever begin
+        i2c_basic_tr tr_dummy;
+        tr_dummy = i2c_basic_tr::type_id::create("tr_dummy");
+        port.write(tr_dummy);
+      end
+    join_none;    
   endtask : run_phase
   
 endclass: i2c_monitor

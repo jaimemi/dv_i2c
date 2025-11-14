@@ -7,9 +7,10 @@ import uvm_pkg::*;
 
 module top;
   //dut if instance
-  
+  dut_if dut_if();
   //dut instance
-  
+  //----- Conectar interfaz
+  //----- Poner interfaz en config database
   //other instances?
   
   initial begin
