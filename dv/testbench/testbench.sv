@@ -8,24 +8,27 @@ import uvm_pkg::*;
 module top;
   //dut if instance
   dut_if dut_if();
+  environment env;
   //dut instance
-  //----- Conectar interfaz
-  //----- Poner interfaz en config database
+  initial begin
+    dut_if.clk = 0;
+    forever #1ns dut_if.clk = ~dut_if.clk;
+  end
   //other instances?
-
-  // Clock
-  bit clk;
-  always #2 clk <= ~clk;
   
   initial begin
     $dumpfile("dump.vcd"); $dumpvars;
     $shm_open("waves.shm");
     $shm_probe("ASM");
 	//reset?
+    dut_if.reset_n = 0;
+    repeat(5) @(posedge dut_if.clk);
+    dut_if.reset_n = 1;
   end
   
   initial begin
 	//interface to database?
+    uvm_config_db#(virtual dut_if)::set(null, "*", "dut_if", dut_if);
     run_test(); //+UVM_TESTNAME=test_dummy
   end
     
