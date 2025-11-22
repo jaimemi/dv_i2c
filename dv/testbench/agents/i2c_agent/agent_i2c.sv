@@ -20,7 +20,7 @@ class i2c_agent extends uvm_agent;
     cfg = i2c_config::type_id::create("i2c_cfg", this);
 
     if(cfg.active) begin
-      m_sequencer = uvm_sequencer#(i2c_basic_tr)::type_id::create("m_sequencer", this);
+      sequencer = uvm_sequencer#(i2c_basic_tr)::type_id::create("sequencer", this);
       driver = i2c_driver::type_id::create("i2c_drv", this);
     end
   endfunction : build_phase
@@ -32,7 +32,7 @@ class i2c_agent extends uvm_agent;
     monitor.cfg = cfg;
 
     if(cfg.active) begin
-      driver.seq_item_port.connect(m_sequencer.seq_item_export);
+      driver.seq_item_port.connect(sequencer.seq_item_export);
       driver.cfg = cfg;
     end
   endfunction : connect_phase

@@ -2,6 +2,7 @@ import uvm_pkg::*;
 `include "uvm_macros.svh"
 
 `include "dut_if.sv"
+`include "package_i2c.sv"
 `include "lib_test.sv"
 //`include "adc_dms_model.sv"
 
