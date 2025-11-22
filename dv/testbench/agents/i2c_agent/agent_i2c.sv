@@ -31,9 +31,11 @@ class i2c_agent extends uvm_agent;
 
     monitor.cfg = cfg;
 
-    if(cfg.active) begin
-      driver.seq_item_port.connect(sequencer.seq_item_export);
-      driver.cfg = cfg;
+    if(cfg.active == UVM_ACTIVE) begin
+      if (driver != null) begin
+        driver.seq_item_port.connect(sequencer.seq_item_export);
+        driver.cfg = cfg;
+      end
     end
   endfunction : connect_phase
     

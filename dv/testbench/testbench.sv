@@ -8,7 +8,7 @@ import uvm_pkg::*;
 
 module top;
   //dut if instance
-  dut_if dut_if();
+  dut_if vif();
 
   logic [7:0] reg_addr_wire;
   logic       wr1rd0_wire;
@@ -20,9 +20,9 @@ module top;
   environment env;
   //dut instance
   i2c_slave dut(
-    .SDA(dut_if.sdata),
-    .SCL(dut_if.sclk),
-    .rst_n(dut_if.reset_n),
+    .SDA(vif.sdata),
+    .SCL(vif.sclk),
+    .rst_n(vif.reset_n),
     .address(i2c_addr_wire),
     .reg_addr(reg_addr_wire), // La dirección se ha leido correctamente
     .wr1rd0(wr1rd0_wire), // 1 si la operación es de escritura, 0 si es de lectura
@@ -34,8 +34,8 @@ module top;
 
   // Clock
   initial begin
-    dut_if.clk = 0;
-    forever #1ns dut_if.clk = ~dut_if.clk;
+    vif.clk = 0;
+    forever #1ns vif.clk = ~vif.clk;
   end
   
   initial begin
@@ -43,14 +43,14 @@ module top;
     $shm_open("waves.shm");
     $shm_probe("ASM");
 	//reset?
-    dut_if.reset_n = 0;
-    repeat(5) @(posedge dut_if.clk);
-    dut_if.reset_n = 1;
+    vif.reset_n = 0;
+    repeat(5) @(posedge vif.clk);
+    vif.reset_n = 1;
   end
   
   initial begin
 	//interface to database?
-    uvm_config_db#(virtual dut_if)::set(null, "*", "dut_if", dut_if);
+    uvm_config_db#(virtual dut_if)::set(null, "*", "dut_if", vif);
     run_test(); //+UVM_TESTNAME=test_dummy
   end
     
