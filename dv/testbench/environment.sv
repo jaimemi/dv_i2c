@@ -1,4 +1,4 @@
-`include "agent_i2c.sv"
+import i2c_pkg::*;
 
 class environment extends uvm_env;  
   `uvm_component_utils(environment)

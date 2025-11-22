@@ -3,10 +3,10 @@
 
 class i2c_basic_tr extends uvm_sequence_item;
   byte device_addr = 1;
-  
-  rand byte addr;  //register address
-  rand byte data;  //register value
-  rand bit read;   //1: read; 0: write
+  rand byte addr;       //register address
+  rand logic[7:0] data; //register value
+  rand bit read = 0;    //1: read; 0: write
+  time t;               //debug info
   
   `uvm_object_utils_begin(i2c_basic_tr)  
     `uvm_field_int(device_addr, UVM_ALL_ON)
@@ -17,6 +17,7 @@ class i2c_basic_tr extends uvm_sequence_item;
    
   function new(string name="" );
     super.new(name);
+    t = $realtime;
   endfunction
 
 endclass : i2c_basic_tr
