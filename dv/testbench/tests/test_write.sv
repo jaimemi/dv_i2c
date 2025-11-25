@@ -31,9 +31,9 @@ class test_write extends base_test;
 
     // 4. CHECKER DIRECTO CON LABEL
     // El label 'reg_write_chk' servirá para el vPlan.
-    reg_write_chk: assert(top.reg_rd_data_wire[addr_chk] == data_chk) 
+    reg_write_chk: assert(top.fake_registers[addr_chk] == data_chk) 
       else `uvm_error("CHECKER", $sformatf("FALLO: En addr %0h se leyó %0h, se esperaba %0h", 
-                                           addr_chk, top.reg_rd_data_wire[addr_chk], data_chk));
+                                           addr_chk, top.fake_registers[addr_chk], data_chk));
 
     `uvm_info(get_name(), "  ** TEST WRITE COMPLETADO **", UVM_LOW)
 

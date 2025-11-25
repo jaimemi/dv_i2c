@@ -30,13 +30,13 @@ class test_dummy extends base_test;
     #10us;
 
     // 4. CHECKER: Accedemos jerárquicamente al array del Testbench
-    // Nota: 'top' es el nombre del módulo en testbench.sv y 'reg_rd_data_wire' el array que creaste.
-    if (top.reg_rd_data_wire[addr_chk] !== data_chk) begin
-      `uvm_error("CHECKER", $sformatf("FALLO: El reg_rd_data_wire[%0h] tiene 0x%0h, se esperaba 0x%0h", 
-                                      addr_chk, top.reg_rd_data_wire[addr_chk], data_chk))
+    // Nota: 'top' es el nombre del módulo en testbench.sv y 'fake_registers' el array que creaste.
+    if (top.fake_registers[addr_chk] !== data_chk) begin
+      `uvm_error("CHECKER", $sformatf("FALLO: El fake_registers[%0h] tiene 0x%0h, se esperaba 0x%0h", 
+                                      addr_chk, top.fake_registers[addr_chk], data_chk))
     end else begin
-      `uvm_info("CHECKER", $sformatf("EXITO: El reg_rd_data_wire[%0h] se actualizó correctamente a 0x%0h", 
-                                     addr_chk, top.reg_rd_data_wire[addr_chk]), UVM_LOW)
+      `uvm_info("CHECKER", $sformatf("EXITO: El fake_registers[%0h] se actualizó correctamente a 0x%0h", 
+                                     addr_chk, top.fake_registers[addr_chk]), UVM_LOW)
     end
 
     `uvm_info(get_name(), "  ** TEST DUMMY COMPLETADO **", UVM_LOW)

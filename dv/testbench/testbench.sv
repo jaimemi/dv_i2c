@@ -14,8 +14,10 @@ module top;
   logic       wr1rd0_wire;
   logic [7:0] reg_wr_data_wire;
   logic       reg_req_wire;
-  logic [7:0] reg_rd_data_wire [0:255]; // No hay reg_block
+  logic [7:0] reg_rd_data_wire;
   logic [6:0] i2c_addr_wire = 7'd1; // Dirección del I2C slave
+
+   logic [7:0] fake_registers [0:255]; // Simulacion de registros
 
   environment env;
   //dut instance
@@ -55,19 +57,22 @@ module top;
     run_test(); //+UVM_TESTNAME=test_dummy
   end
 
+  // Initialize fake_registers
+  initial begin
+      foreach(fake_registers[i]) fake_registers[i] = 0;
+  end
 
-  // Write reg_rd_data_
+  // Write fake_registers from dut
   always @(posedge vif.clk) begin
-    if (!vif.reset_n) begin
-       // Opcional: inicializar registros a 0 o valores por defecto
-       foreach(reg_rd_data_wire[i]) reg_rd_data_wire[i] = 0;
-    end else begin
-       // Si reg_req está activo y wr1rd0 es 1 (Escritura)
-       if (reg_req_wire && wr1rd0_wire) begin
-          reg_rd_data_wire[reg_addr_wire] = reg_wr_data_wire;
-          $display("Escritura en addr %0h: %0h", reg_addr_wire, reg_wr_data_wire);
-       end
+    if (reg_req_wire && wr1rd0_wire) begin
+      fake_registers[reg_addr_wire] = reg_wr_data_wire;
+      $display("Escritura en addr %0h: %0h", reg_addr_wire, reg_wr_data_wire);
     end
   end
+
+  // Read fake_registers from dut
+  assign reg_rd_data_wire = fake_registers[reg_addr_wire];
+
+
     
 endmodule : top

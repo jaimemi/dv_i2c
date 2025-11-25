@@ -52,7 +52,7 @@ class i2c_driver extends uvm_driver #(i2c_basic_tr);
           if(req.read) begin
             // Read operation --> for RAL read operation it's needed to get_byte
             fork
-              set_byte(8'bz, period_ns);
+              // set_byte(8'bz, period_ns);
               get_byte(third_byte);
             join
             set_ack(ack, period_ns);
