@@ -2,3 +2,4 @@
 
 `include "test_dummy.sv"
 //other tests
+`include "test_write.sv"
