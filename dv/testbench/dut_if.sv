@@ -16,6 +16,14 @@ interface dut_if();
       
   logic sda_val;
   logic scl_val;
+
+  // Test information
+  logic [7:0] reg_addr_wire;
+  logic       wr1rd0_wire;
+  logic [7:0] reg_wr_data_wire;
+  logic       reg_req_wire;
+  logic [7:0] reg_rd_data_wire;
+  logic [6:0] i2c_addr_wire = 7'd1;
   
   //glue logic
   assign sdata = sda_drive ? sda_val : 'z;

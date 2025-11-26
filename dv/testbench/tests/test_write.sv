@@ -5,6 +5,17 @@ class test_write extends base_test;
   function new(string name, uvm_component parent);
     super.new(name,parent);
   endfunction
+
+  // This function modifies the i2c clk frequency
+  function void end_of_elaboration_phase(uvm_phase phase);
+    super.end_of_elaboration_phase(phase);
+    // Jerarquical access to config within agent
+    // env -> agente -> cfg -> variable; 
+    env.agente.cfg.clk_period_ns = 500;
+
+    `uvm_info(get_name(), $sformatf("Frecuencia I2C modificada. Nuevo periodo: %0d ns", 
+                                env.agente.cfg.clk_period_ns), UVM_LOW)
+  endfunction
   
   task run_phase(uvm_phase phase);
     i2c_basic_seq seq;
@@ -31,9 +42,6 @@ class test_write extends base_test;
 
     // 4. CHECKER DIRECTO CON LABEL
     // El label 'reg_write_chk' servirá para el vPlan.
-    reg_write_chk: assert(top.fake_registers[addr_chk] == data_chk) 
-      else `uvm_error("CHECKER", $sformatf("FALLO: En addr %0h se leyó %0h, se esperaba %0h", 
-                                           addr_chk, top.fake_registers[addr_chk], data_chk));
 
     `uvm_info(get_name(), "  ** TEST WRITE COMPLETADO **", UVM_LOW)
 

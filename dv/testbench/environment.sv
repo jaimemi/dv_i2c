@@ -7,6 +7,7 @@ class environment extends uvm_env;
   
   //agents
   i2c_agent agente;
+  i2c_scoreboard scb;
   
   function new(string name, uvm_component parent);
     super.new(name,parent);
@@ -17,10 +18,14 @@ class environment extends uvm_env;
 	  //create other agents
     agente = i2c_agent::type_id::create("agt", this);
     // scb = my_scoreboard::type_id::create("scb", this);
+    scb = i2c_scoreboard::type_id::create("scb", this);
   endfunction
 
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
     // agente.monitor.port.connect(scb.fifo_seq.analysis_export);
+    // El puerto del monitor se llama 'port' (ver monitor_i2c.sv)
+    // El puerto del scoreboard lo hemos llamado 'item_collected_export'
+    agente.monitor.port.connect(scb.item_collected_export);
   endfunction
 endclass : environment

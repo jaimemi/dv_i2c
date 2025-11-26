@@ -38,12 +38,12 @@ local task set_start(int period_ns=1000);
     dut_vif.sda_val = 0;
     #(period_ns*1ns);
     dut_vif.scl_val = 0;
-    #(period_ns*1ns);
+    //#(period_ns*1ns);
 endtask
 
 local task set_stop(int period_ns=1000);
     dut_vif.sda_drive = 1;
-    #(period_ns*1ns);
+    // #(period_ns*1ns);
     dut_vif.sda_val = 0;
     dut_vif.scl_val = 0;
     #(period_ns*1ns);

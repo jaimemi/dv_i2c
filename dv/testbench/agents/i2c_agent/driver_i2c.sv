@@ -35,6 +35,14 @@ class i2c_driver extends uvm_driver #(i2c_basic_tr);
 
           seq_item_port.get_next_item(req);
           `uvm_info("I2C", $sformatf("Drv writes %p", req), UVM_LOW);
+
+          // Inicializar registros internos del dut
+          if(req.read) begin
+            dut_vif.reg_rd_data_wire = req.data;
+          end else begin
+            dut_vif.reg_rd_data_wire = 8'h00;
+          end
+
           dut_vif.scl_drive = 1;
 
           // Send device address and r/w operation
@@ -52,7 +60,7 @@ class i2c_driver extends uvm_driver #(i2c_basic_tr);
           if(req.read) begin
             // Read operation --> for RAL read operation it's needed to get_byte
             fork
-              // set_byte(8'bz, period_ns);
+              set_byte(8'bz, period_ns);
               get_byte(third_byte);
             join
             set_ack(ack, period_ns);
@@ -79,11 +87,14 @@ class i2c_driver extends uvm_driver #(i2c_basic_tr);
     dut_vif.sda_drive = 0;
     dut_vif.scl_val = 0;
     #(period_ns*1ns);
+    //Flanco de Subida (Master lee ack)
     dut_vif.scl_val = 1;
-    #(period_ns*1ns);
-    dut_vif.scl_val = 0;
-    #(period_ns*1ns);
     ack = dut_vif.sdata;
+    #(period_ns*1ns);
+    //Flanco de Bajada (fin de ACK)
+    dut_vif.scl_val = 0;
+    //#(period_ns*1ns);
+    //ack = dut_vif.sdata;
   endtask
   
 endclass: i2c_driver

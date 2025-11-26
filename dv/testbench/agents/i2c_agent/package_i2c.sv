@@ -6,4 +6,5 @@ package i2c_pkg;
     `include "seq_i2c.sv"
     `include "agent_i2c.sv"
     `include "adapter_i2c.sv"
+    `include "i2c_scoreboard.sv"
 endpackage : i2c_pkg
