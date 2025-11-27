@@ -10,6 +10,8 @@ class i2c_scoreboard extends uvm_scoreboard;
 
     virtual dut_if dut_vif;
 
+    // Memoria interna que almacena resultados esperados
+
     function new(string name, uvm_component parent);
         super.new(name, parent);
     endfunction

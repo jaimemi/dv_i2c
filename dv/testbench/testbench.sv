@@ -10,6 +10,10 @@ module top;
   //dut if instance
   dut_if vif();
 
+  logic [7:0] reg_memory;
+
+  assign vif.reg_rd_data_wire = reg_memory;
+
   environment env;
   //dut instance
   i2c_slave dut(
@@ -47,6 +51,5 @@ module top;
     uvm_config_db#(virtual dut_if)::set(null, "*", "dut_if", vif);
     run_test(); //+UVM_TESTNAME=test_dummy
   end
-
     
 endmodule : top

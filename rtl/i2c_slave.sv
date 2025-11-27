@@ -18,7 +18,7 @@ module i2c_slave(
   
   and a1(sda_check, SDA, sda_sense);
   
-  enum reg[3:0] {IDLE, SAMPLE_BYTE_1, WR1, ACK1, SAMPLE_BYTE_2, ACK2, SAMPLE_BYTE_3, ACK3, ACK3_aux, SEND_BYTE_3_aux, SEND_BYTE_3} state;
+  enum reg[3:0] {IDLE, SAMPLE_BYTE_1, WR1, ACK1, SAMPLE_BYTE_2, ACK2, SAMPLE_BYTE_3, ACK3, ACK3_aux, SEND_BYTE_3_aux, SEND_BYTE_3, ACK3_get} state;
   
   always_ff @(SCL, negedge rst_n) begin
     if(!rst_n) begin
@@ -75,8 +75,10 @@ module i2c_slave(
         ACK1 : begin
           if(SCL == 1) begin  //posedge
             state <= SAMPLE_BYTE_2;
-            ACK <= 1;
+            // ACK <= 1;   //MOD
             count <= 7;
+          end else begin
+            ACK <= 1;   //MOD
           end
         end
 
@@ -85,10 +87,15 @@ module i2c_slave(
             if(count == 0) begin
               state <= ACK2;
               count <= 7;
+              if(!wr1rd0) begin   //MOD
+                reg_req <= 1;     //MOD
+              end                 //MOD
             end
-            ACK <= 0;
+            // ACK <= 0;   //MOD
             reg_addr[count] <= SDA;
             count <= count - 1;
+          end else begin
+            ACK <= 0;   //MOD
           end
         end
         
@@ -99,10 +106,12 @@ module i2c_slave(
               count <= 7;
             end else begin
               state <= SEND_BYTE_3_aux;
-              reg_req <= 1;
+              // reg_req <= 1;  //MOD
               count <= 7;
             end
-            ACK <= 1;
+            // ACK <= 1;   //MOD
+          end else begin
+            ACK <= 1;   //MOD
           end
         end
         
@@ -113,17 +122,21 @@ module i2c_slave(
               count <= 7;
               reg_req <= 1;
             end 
-            ACK <= 0;
+            // ACK <= 0;   //MOD
             reg_wr_data[count] <= SDA;
             count <= count - 1;
+          end else begin
+            ACK <= 0;   //MOD
           end
         end
         
         ACK3: begin
           if(SCL == 1) begin  //posedge
-            ACK <= 1;
+            // ACK <= 1;   //MOD
             count <= 7;
             state <= IDLE;
+          end else begin
+            ACK <= 1;   //MOD
           end
         end
         
@@ -132,10 +145,13 @@ module i2c_slave(
             state <= SEND_BYTE_3;
             sda <= reg_rd_data[count];  //first bit
             count <= count - 1;
+            reg_req <= 0;   //MOD
+            ACK <= 0;   //MOD
           end
         end
         
         SEND_BYTE_3: begin
+
           if(SCL == 0) begin  //negedge
             if(count == 0) begin
               sda_sense <= 1;
@@ -151,10 +167,19 @@ module i2c_slave(
         
         ACK3_aux: begin
           if(SCL == 0) begin  //negedge
-            state <= ACK3;
+            state <= ACK3_get;
           end
         end
-        
+
+        ACK3_get: begin
+          if(SCL == 0) begin  //posedge
+            count <= 7;
+            state <= IDLE;
+          end else begin
+            ACK <= !SDA;   //MOD
+          end
+        end
+
       endcase
     end //if
   end   //always

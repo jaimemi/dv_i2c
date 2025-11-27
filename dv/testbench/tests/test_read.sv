@@ -20,7 +20,7 @@ class test_read extends base_test;
   task run_phase(uvm_phase phase);
     i2c_basic_seq seq;
     // Definimos la dirección y dato esperados para usarlo en la comprobación
-    byte addr_chk = 8'h02;
+    byte addr_chk = 8'h03;
     byte data_chk = 8'hA5;
 
     phase.raise_objection(this);
@@ -30,6 +30,9 @@ class test_read extends base_test;
     // Esto simula que el registro ya tiene el valor 0xA5 guardado.
     `uvm_info(get_name(), $sformatf("Pre-cargando memoria TB: addr %0h = %0h", addr_chk, data_chk), UVM_LOW)
 
+    //0. Cargar el registro de lectura del DUT
+    top.reg_memory = data_chk;
+    
     // 1. Crear y configurar la secuencia de LECTURA
     seq = i2c_basic_seq::type_id::create("seq");
     seq.i2c_addr = addr_chk; 
