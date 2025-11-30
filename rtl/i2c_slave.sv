@@ -43,6 +43,7 @@ module i2c_slave(
             state <= IDLE;
           end
           ACK <= 0;
+          sda <= 1;   //MOD
           count <= 7;
           chip_addr <= 0;
           reg_addr <= 0;
@@ -79,6 +80,7 @@ module i2c_slave(
             count <= 7;
           end else begin
             ACK <= 1;   //MOD
+            sda <= 0;   //MOD
           end
         end
 
@@ -96,6 +98,7 @@ module i2c_slave(
             count <= count - 1;
           end else begin
             ACK <= 0;   //MOD
+            sda <= 1;   //MOD
           end
         end
         
@@ -112,6 +115,7 @@ module i2c_slave(
             // ACK <= 1;   //MOD
           end else begin
             ACK <= 1;   //MOD
+            sda <= 0;   //MOD
           end
         end
         
@@ -127,6 +131,7 @@ module i2c_slave(
             count <= count - 1;
           end else begin
             ACK <= 0;   //MOD
+            sda <= 1;   //MOD
           end
         end
         
@@ -137,6 +142,7 @@ module i2c_slave(
             state <= IDLE;
           end else begin
             ACK <= 1;   //MOD
+            sda <= 0;   //MOD
           end
         end
         
@@ -147,6 +153,7 @@ module i2c_slave(
             count <= count - 1;
             reg_req <= 0;   //MOD
             ACK <= 0;   //MOD
+            sda <= 1;   //MOD
           end
         end
         
