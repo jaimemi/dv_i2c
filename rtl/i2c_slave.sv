@@ -11,185 +11,184 @@ module i2c_slave(
 );
 
   reg [2:0] count;
-  reg sda, sda_sense; // sda_sense is to sensetize sda in start and stop conditions to trigger logic otherwise stay insensetive.
+  reg sda; 
   reg [7:0] chip_addr;
-  wire sda_check;
   reg ACK;
+
+  enum reg[3:0] {
+    IDLE, 
+    SAMPLE_BYTE_1, ACK1, 
+    SAMPLE_BYTE_2, ACK2, 
+    SAMPLE_BYTE_3, ACK3,
+    SEND_BYTE_3, ACK3_GET
+  } state;
+
+  // 1. Detectores Asíncronos
+  logic start_detected;
+  logic stop_detected;
+
+  always @(negedge SDA or negedge SCL) begin
+    if (SCL == 0) start_detected = 0;
+    else          start_detected = 1;
+  end
+
+  always @(posedge SDA or negedge SCL) begin
+    if (SCL == 0) stop_detected = 0;
+    else          stop_detected = 1;
+  end
   
-  and a1(sda_check, SDA, sda_sense);
-  
-  enum reg[3:0] {IDLE, SAMPLE_BYTE_1, WR1, ACK1, SAMPLE_BYTE_2, ACK2, SAMPLE_BYTE_3, ACK3, ACK3_aux, SEND_BYTE_3_aux, SEND_BYTE_3, ACK3_get} state;
-  
-  always_ff @(SCL, negedge rst_n) begin
+  always_ff @(SCL, negedge rst_n, posedge start_detected) begin
+
     if(!rst_n) begin
-      state <= IDLE;
-      //dout <= 1'b0;
-      wr1rd0 <= 1'b0;
-      ACK <= 1'b0;
       count <= 7;
-      //tx_reg <= 0;
       sda <= 1;
       chip_addr <= 0;
+      ACK <= 0;
+
+      state <= IDLE;
+
       reg_addr <= 0;
+      wr1rd0 <= 0;
       reg_wr_data <= 0;
       reg_req <= 0;
-    end else begin
-      case(state)
+
+    end else if (start_detected) begin 
+      count <= 7;
+      sda <= 1;
+      chip_addr <= 0;
+      ACK <= 0;
+
+      state <= SAMPLE_BYTE_1;
+
+      reg_addr <= 0;
+      wr1rd0 <= 0;
+      reg_wr_data <= 0;
+      reg_req <= 0;
+
+    end else if (SCL == 1) begin // FSM que funciona con flancos positivos
+      case (state)
         IDLE: begin
-          if(SDA == 0 && SCL == 0) begin  //start condition
-            state <= SAMPLE_BYTE_1;
-            sda_sense <= 0;
-          end else begin
-            state <= IDLE;
-          end
-          ACK <= 0;
-          sda <= 1;   //MOD
           count <= 7;
+          sda <= 1;
           chip_addr <= 0;
+          ACK <= 0;
+
           reg_addr <= 0;
+          wr1rd0 <= 0;
           reg_wr_data <= 0;
           reg_req <= 0;
-        end  //IDLE
-        
+        end
+
         SAMPLE_BYTE_1: begin
-          if(SCL == 1) begin  //posedge
-            chip_addr[count] <= SDA; 				//sample byte1
-            if(count == 1) begin
-              state <= WR1; 
+          chip_addr[count] <= SDA;
+          if(count == 0) begin
+            if(chip_addr[7:1] == address) begin
+                count <= 7;
+                ACK <= 1; //ACK
+
+                state <= ACK1;
+
+                wr1rd0 <= SDA; // Guardamos si es Read o Write
+            end else begin
+                state <= IDLE; // No somos nosotros
             end
+          end else begin
             count <= count - 1;
           end
-        end //SAMPLE_BYTE1
-        
-        WR1 : begin
-          if(SCL == 1) begin  //posedge
-            if(chip_addr[7:1] == address) begin	//address chip?
-                state <= ACK1; 
-              end else begin
-                state <= IDLE;
-                count <= 7;
-              end
-           	  wr1rd0 <= SDA;
-          end
         end
-        
-        ACK1 : begin
-          if(SCL == 1) begin  //posedge
-            state <= SAMPLE_BYTE_2;
-            // ACK <= 1;   //MOD
-            count <= 7;
-          end else begin
-            ACK <= 1;   //MOD
-            sda <= 0;   //MOD
-          end
+
+        ACK1: begin
+          ACK <= 0; // NOT ACK
+
+          state <= SAMPLE_BYTE_2;
         end
 
         SAMPLE_BYTE_2: begin
-          if(SCL == 1) begin  //posedge
-            if(count == 0) begin
-              state <= ACK2;
-              count <= 7;
-              if(!wr1rd0) begin   //MOD
-                reg_req <= 1;     //MOD
-              end                 //MOD
-            end
-            // ACK <= 0;   //MOD
-            reg_addr[count] <= SDA;
-            count <= count - 1;
-          end else begin
-            ACK <= 0;   //MOD
-            sda <= 1;   //MOD
-          end
-        end
-        
-        ACK2 : begin
-          if(SCL == 1) begin  //posedge
-            if(wr1rd0) begin
-              state <= SAMPLE_BYTE_3;
-              count <= 7;
-            end else begin
-              state <= SEND_BYTE_3_aux;
-              // reg_req <= 1;  //MOD
-              count <= 7;
-            end
-            // ACK <= 1;   //MOD
-          end else begin
-            ACK <= 1;   //MOD
-            sda <= 0;   //MOD
-          end
-        end
-        
-        SAMPLE_BYTE_3: begin
-          if(SCL == 1) begin  //posedge
-            if(count == 0) begin
-              state <= ACK3;
-              count <= 7;
-              reg_req <= 1;
-            end 
-            // ACK <= 0;   //MOD
-            reg_wr_data[count] <= SDA;
-            count <= count - 1;
-          end else begin
-            ACK <= 0;   //MOD
-            sda <= 1;   //MOD
-          end
-        end
-        
-        ACK3: begin
-          if(SCL == 1) begin  //posedge
-            // ACK <= 1;   //MOD
+          reg_addr[count] <= SDA;
+          if(count == 0) begin
             count <= 7;
-            state <= IDLE;
+            ACK <= 1;  // ACK
+
+            state <= ACK2; 
+
+            if(wr1rd0 == 0) reg_req <= 1;
           end else begin
-            ACK <= 1;   //MOD
-            sda <= 0;   //MOD
+            count <= count - 1;
           end
         end
-        
-        SEND_BYTE_3_aux: begin
-          if(SCL == 0) begin  //negedge
+
+        ACK2: begin
+          ACK <= 0; //NOT ACK
+
+          if(wr1rd0 == 0) begin 
             state <= SEND_BYTE_3;
-            sda <= reg_rd_data[count];  //first bit
-            count <= count - 1;
-            reg_req <= 0;   //MOD
-            ACK <= 0;   //MOD
-            sda <= 1;   //MOD
-          end
-        end
-        
-        SEND_BYTE_3: begin
 
-          if(SCL == 0) begin  //negedge
-            if(count == 0) begin
-              sda_sense <= 1;
-              sda <= 1;   //to set Z
-              count <= 7;
-              state <= ACK3_aux;
-            end
             reg_req <= 0;
-            sda <= reg_rd_data[count];
-            count <= count - 1;
-          end    
-        end
-        
-        ACK3_aux: begin
-          if(SCL == 0) begin  //negedge
-            state <= ACK3_get;
+          end else begin   
+            state <= SAMPLE_BYTE_3;
           end
         end
 
-        ACK3_get: begin
-          if(SCL == 0) begin  //posedge
+        SAMPLE_BYTE_3: begin
+          reg_wr_data[count] <= SDA;
+          if(count == 0) begin
             count <= 7;
-            state <= IDLE;
+            ACK <= 1; //ACK
+
+            state <= ACK3;
+            
+            reg_req <= 1;
           end else begin
-            ACK <= !SDA;   //MOD
+            count <= count - 1;
           end
+        end
+
+        SEND_BYTE_3: begin
+          if(count == 0) begin // Overflow (0->7) indica fin de byte
+              count <= 7;
+
+              state <= ACK3_GET;
+          end else begin
+              count <= count - 1;
+          end
+        end
+
+        ACK3: begin
+          ACK <= 0;  // NOT ACK
+
+          reg_req <= 0;
+
+          state <= IDLE; 
+        end
+
+        ACK3_GET: begin
+          ACK <= !SDA; // GET ACK
+
+          state <= IDLE;
         end
 
       endcase
-    end //if
-  end   //always
+
+    end else if (SCL == 0) begin // FSM que funciona con flancos negativos
+      case (state)
+        IDLE: begin
+          sda <= 1;
+        end
+
+        ACK1, ACK2, ACK3: begin
+          sda <= 0;
+        end
+
+        SAMPLE_BYTE_2, SAMPLE_BYTE_3: begin
+          sda <= 1;
+        end
+
+        SEND_BYTE_3: begin
+          sda <= reg_rd_data[count];
+        end    
+      endcase
+    end
+  end
         
   assign SDA = (sda == 1) ? 1'bz : 1'b0;
   

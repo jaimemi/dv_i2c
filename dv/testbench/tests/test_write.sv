@@ -24,6 +24,9 @@ class test_write extends base_test;
     byte data_chk = 8'h55;
 
     phase.raise_objection(this);
+
+    #20ns // Esperar al reset
+
     `uvm_info(get_name(), "  ** INICIANDO TEST WRITE **", UVM_LOW)
 
     // 1. Crear y configurar la secuencia de ESCRITURA
