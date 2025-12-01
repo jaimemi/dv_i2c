@@ -11,7 +11,7 @@ class test_write extends base_test;
     super.end_of_elaboration_phase(phase);
     // Jerarquical access to config within agent
     // env -> agente -> cfg -> variable; 
-    env.agente.cfg.clk_period_ns = 500;
+    env.agente.cfg.clk_period_ns = 5000;
 
     `uvm_info(get_name(), $sformatf("Frecuencia I2C modificada. Nuevo periodo: %0d ns", 
                                 env.agente.cfg.clk_period_ns), UVM_LOW)

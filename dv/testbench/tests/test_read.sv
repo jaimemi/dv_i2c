@@ -11,7 +11,7 @@ class test_read extends base_test;
     super.end_of_elaboration_phase(phase);
     // Jerarquical access to config within agent
     // env -> agente -> cfg -> variable; 
-    env.agente.cfg.clk_period_ns = 500;
+    env.agente.cfg.clk_period_ns = 5000;
 
     `uvm_info(get_name(), $sformatf("Frecuencia I2C modificada. Nuevo periodo: %0d ns", 
                                 env.agente.cfg.clk_period_ns), UVM_LOW)
@@ -24,6 +24,9 @@ class test_read extends base_test;
     byte data_chk = 8'hA5;
 
     phase.raise_objection(this);
+
+    #20ns // Esperar al reset
+
     `uvm_info(get_name(), "  ** INICIANDO TEST READ **", UVM_LOW)
 
     // PREPARACIÓN: Escribimos 'backdoor' en la memoria del TB

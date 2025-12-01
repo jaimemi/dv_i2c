@@ -54,6 +54,12 @@ class i2c_driver extends uvm_driver #(i2c_basic_tr);
           get_ack(ack, period_ns);
           //if(!ack == 0) break;
 
+          // Force abort
+          if (req.force_abort) begin
+             #2 seq_item_port.item_done();
+             continue; 
+          end
+
           // Send register address
           second_byte = req.addr;
           dut_vif.sda_drive = 1; // Pull up sda bus drive

@@ -1,2 +1,3 @@
-test_dummy
-
+test_write
+test_read
+test_rw_rand

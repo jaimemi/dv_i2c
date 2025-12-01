@@ -1,0 +1,78 @@
+*** Message Type: info ***
+When: Mon Dec 01 01:22:13 CET 2025
+SimVision started.
+Version: TOOL:  simvision(64)   23.03-s007
+User: mue09
+Host: xip.uv.es
+Platform: Linux/x86_64/4.18.0-553.50.1.el8_10.x86_64
+Started: Mon Dec 01 01:22:13 CET 2025
+Command: /eda/cadence/2023-24/RHELx86/XCELIUM_23.03.007/tools.lnx86/simvision/bin/64bit/simvision.exe -64
+Work Directory: /exports/home/mue09/Documentos/T&V/dv_i2c
+ 
+*** Message Type: info ***
+When: Mon Dec 01 01:22:13 CET 2025
+Create waveform window: "Waveform 1"
+ 
+*** Message Type: info ***
+When: Mon Dec 01 01:22:25 CET 2025
+Create console window: "Console"
+ 
+*** Message Type: info ***
+When: Mon Dec 01 01:22:26 CET 2025
+Create utility window: "Properties"
+ 
+*** Message Type: error ***
+When: Mon Dec 01 01:38:28 CET 2025
+couldn't open "/exports/home/mue09/Documentos/T&V/dv_i2c/.simvision/3976658_mue09__autosave.tcl.svcf": no such file or directory
+    while executing
+"# Compiled -- no source code available
+error "called a copy of a compiled script""
+    (procedure "::savescript::autosave" line 1)
+    invoked from within
+"::savescript::autosave $filename"
+    (object "::application" method "::Application::auto-save" body line 18)
+    invoked from within
+"::application auto-save"
+    (in namespace inscope "::Application" script line 1)
+    invoked from within
+"namespace inscope ::Application {::application auto-save}"
+    ("after" script)
+ 
+*** Message Type: error ***
+When: Mon Dec 01 01:38:28 CET 2025
+couldn't open "/exports/home/mue09/Documentos/T&V/dv_i2c/.simvision/3976658_mue09__autosave.tcl.svcf": no such file or directory
+    while executing
+"# Compiled -- no source code available
+error "called a copy of a compiled script""
+    (procedure "::savescript::autosave" line 1)
+    invoked from within
+"::savescript::autosave $filename"
+    (object "::application" method "::Application::auto-save" body line 18)
+    invoked from within
+"::application auto-save"
+    (in namespace inscope "::Application" script line 1)
+    invoked from within
+"namespace inscope ::Application {::application auto-save}"
+    ("after" script)
+ 
+*** Message Type: error ***
+When: Mon Dec 01 01:38:28 CET 2025
+couldn't open "/exports/home/mue09/Documentos/T&V/dv_i2c/.simvision/3976658_mue09__autosave.tcl.svcf": no such file or directory
+    while executing
+"# Compiled -- no source code available
+error "called a copy of a compiled script""
+    (procedure "::savescript::autosave" line 1)
+    invoked from within
+"::savescript::autosave $filename"
+    (object "::application" method "::Application::auto-save" body line 18)
+    invoked from within
+"::application auto-save"
+    (in namespace inscope "::Application" script line 1)
+    invoked from within
+"namespace inscope ::Application {::application auto-save}"
+    ("after" script)
+ 
+*** Message Type: info ***
+When: Mon Dec 01 01:44:04 CET 2025
+SimVision Exit.
+ 
