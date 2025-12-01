@@ -1,3 +1,2 @@
-test_write
-test_read
+test_abort
 test_rw_rand
