@@ -4,11 +4,11 @@
 `include "transaction_i2c.sv"
 
 class i2c_basic_seq extends uvm_sequence#(i2c_basic_tr);
-  byte device_addr; // Master & Slave Addres
+  byte i2c_device_addr; // Master & Slave Addres
   byte i2c_addr;  //register address
   byte i2c_data;  //register value
   bit i2c_read;   //1: read; 0: write
-  bit force_abort; // Force message abort
+  bit i2c_force_abort; // Force message abort
   
   `uvm_object_utils(i2c_basic_seq)
   
@@ -21,8 +21,8 @@ class i2c_basic_seq extends uvm_sequence#(i2c_basic_tr);
     `uvm_do_with(req, { req.addr == i2c_addr;
                     req.data == i2c_data;
                     req.read == i2c_read; 
-                    req.device_addr == device_addr;
-                    req.force_abort == force_abort;});
+                    req.device_addr == i2c_device_addr;
+                    req.force_abort == i2c_force_abort;});
   endtask : body
 endclass : i2c_basic_seq
 

@@ -42,7 +42,7 @@ class test_device_addr extends base_test;
 
     // 2. Creación de la secuencia
     seq = i2c_basic_seq::type_id::create("seq");
-    seq.device_addr = rand_device_addr;
+    seq.i2c_device_addr = rand_device_addr;
     seq.i2c_addr = rand_addr;
     seq.i2c_read = rand_rw; // 0: Write, 1: Read
     if (rand_rw == 0) begin
