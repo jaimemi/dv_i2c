@@ -40,8 +40,10 @@ class test_abort extends base_test;
 
     // 2. Creación de la secuencia
     seq = i2c_basic_seq::type_id::create("seq");
+    seq.device_addr = 1;
     seq.i2c_addr = rand_addr;
     seq.i2c_read = rand_rw; // 0: Write, 1: Read
+    seq.force_abort = 0;
     if (rand_rw == 0) begin
         seq.i2c_data = rand_data;
         `uvm_info("TEST_RND", $sformatf("[WRITE] Addr: 0x%0h | Data: 0x%0h", rand_addr, rand_data), UVM_LOW)
@@ -49,7 +51,6 @@ class test_abort extends base_test;
         top.reg_memory = rand_data;
         `uvm_info("TEST_RND", $sformatf("[READ] Addr: 0x%0h | Data: 0x%0h", rand_addr, rand_data), UVM_LOW)
     end
-    seq.force_abort = 1;
 
     // 3. Ejecución
     seq.start(env.agente.sequencer);

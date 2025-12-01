@@ -31,9 +31,11 @@ class test_write extends base_test;
 
     // 1. Crear y configurar la secuencia de ESCRITURA
     seq = i2c_basic_seq::type_id::create("seq");
+    seq.device_addr = 1;
     seq.i2c_addr = addr_chk; 
     seq.i2c_data = data_chk; 
     seq.i2c_read = 1'b0; // Write!
+    seq.force_abort = 0;
 
     `uvm_info(get_name(), $sformatf("Escribiendo 0x%0h en dirección 0x%0h...", data_chk, addr_chk), UVM_LOW)
 
