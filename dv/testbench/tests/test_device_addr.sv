@@ -56,6 +56,14 @@ class test_device_addr extends base_test;
     // 3. Ejecución
     seq.start(env.agente.sequencer);
 
+    #5000ns;
+
+    `uvm_info(get_name(), $sformatf(" ** INICIANDO RETRY **"), UVM_LOW)
+
+    seq.i2c_device_addr = 1;
+
+    seq.start(env.agente.sequencer);
+
     `uvm_info(get_name(), "  ** TEST OTHER I2C ADDRESS COMPLETADO **", UVM_LOW)
  	  
     phase.drop_objection(this);

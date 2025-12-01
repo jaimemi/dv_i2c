@@ -54,6 +54,14 @@ class test_abort extends base_test;
     // 3. Ejecución
     seq.start(env.agente.sequencer);
 
+    #5000ns;
+
+    `uvm_info(get_name(), $sformatf(" ** INICIANDO RETRY **"), UVM_LOW)
+
+    seq.i2c_force_abort = 0;
+
+    seq.start(env.agente.sequencer);
+
     `uvm_info(get_name(), "  ** TEST ABORT COMPLETADO **", UVM_LOW)
  	  
     phase.drop_objection(this);
