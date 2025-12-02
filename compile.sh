@@ -47,7 +47,7 @@ function regression () {
   printf '%s\n' "${res[@]}"   #show regression result
 
   #Merge coverage results. https://community.cadence.com/cadence_technology_forums/f/functional-verification/20269/how-to-merge-the-coverage-report-using-imc
-  command_merge='imc -execcmd "merge cov_work/scope/* -out all"'
+  command_merge='imc -execcmd "merge cov_work/scope/* -out all -overwrite"'
   [ $coverage -eq 1 ] && eval $command_merge   #TODO check if this works
 }
 
