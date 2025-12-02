@@ -81,7 +81,7 @@ END
 command="xrun  "
 command+="dv/testbench/testbench.sv rtl/digital_top.sv -f rtl/dut.f -sv -sysv "
 command+="-64bit -dynamic -turbo  "
-command+="-incdir . -incdir ./dv/testbench/ -incdir ./dv/testbench/tests/ -incdir ./dv/testbench/agents/i2c_agent/ -incdir ./dv/testbench/agents/clock_agent/ -incdir ./dv/testbench/models/ -incdir ./rtl/ "
+command+="-incdir . -incdir ./dv/testbench/ -incdir ./dv/testbench/tests/ -incdir ./dv/testbench/agents/i2c_agent/ -incdir ./dv/testbench/agents/clock_agent/ -incdir ./dv/testbench/models/ -incdir ./rtl/ -incdir ./dv/coverage/"
 command+="+overwrite -access +rw  "
 command+="-run  "
 command+="-stats -status  -licqueue "
