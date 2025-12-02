@@ -8,3 +8,4 @@
 `include "test_clk.sv"
 `include "test_abort.sv"
 `include "test_device_addr.sv"
+`include "test_all.sv"

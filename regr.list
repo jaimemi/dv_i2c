@@ -4,3 +4,4 @@ test_rw_rand
 test_clk
 test_abort
 test_device_addr
+test_all
