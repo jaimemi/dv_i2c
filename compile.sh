@@ -107,7 +107,7 @@ while getopts dcrs:h option; do
             [ $debug -eq 1 ] && echo "option c"
             coverage=1
             command+=" -coverage all -cov_cgsample -covoverwrite "
-            ommand_regr_ini+=" -coverage all -cov_cgsample -covoverwrite "
+            command_regr_ini+=" -coverage all -cov_cgsample -covoverwrite "
             ;;
         r) # regression
             #compile only (for regressions)
