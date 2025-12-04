@@ -29,6 +29,8 @@ class i2c_scoreboard extends uvm_scoreboard;
     // 3. Función write: Se ejecuta automáticamente CADA VEZ que el monitor envía algo
     virtual function void write(i2c_basic_tr tr);
 
+        `uvm_info("I2C", $sformatf("Comprobando checks %d   %d", tr.addr, dut_vif.reg_addr_wire), UVM_LOW);
+
         reg_addr_check: assert(tr.addr == dut_vif.reg_addr_wire)
             else `uvm_error("CHECKER", $sformatf("FALLO: En addr %0h. El DUT decodificó %0h", 
                                                     tr.addr, dut_vif.reg_addr_wire));
